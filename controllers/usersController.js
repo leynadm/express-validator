@@ -100,12 +100,15 @@ exports.searchForUsers = (req, res) => {
   const userEmail = req.query.search;
   const usersDb = usersStorage.storage;
 
+  if (!userEmail || userEmail.trim() === "") {
+    return res.status(400).send("Please provide a valid email to search.");
+  }
 
   const userResults = Object.values(usersDb).filter(
     (user) => user.email.toLowerCase() === userEmail.toLowerCase()
   );
 
-  return res.render("searchUser", {
+  return res.status(200).render("searchUser", {
     title: "Search user",
     userResults,
     message:

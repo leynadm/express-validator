@@ -13,21 +13,25 @@
     <%= title %>
   </h1>
 
-  <%- include("partials/errors.ejs") %>
   
   <a href="/">Back to home</a>
 
   <form action="/search-users" method="GET">
 
     <label for="email">Email: </label>
-    <input type="text" id="email" name="search" />
+    <input type="text" required id="email" name="search" />
 
     <button type="submit">Find Users</button>
   </form>
 
-  <%- include("partials/searchedUsersList.ejs") %>
-  <%- message %>
+
   
+    <% if (locals.message) { %>
+      <p><%= message %></p>
+    <% } %>
+
+    <%- include("partials/searchedUsersList.ejs") %>
+
 </body>
 
 </html>
