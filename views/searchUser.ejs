@@ -1,0 +1,33 @@
+<!-- views/createUser.ejs -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+
+  <%- include("partials/errors.ejs") %>
+  
+  <a href="/">Back to home</a>
+
+  <form action="/search-users" method="GET">
+
+    <label for="email">Email: </label>
+    <input type="text" id="email" name="search" />
+
+    <button type="submit">Find Users</button>
+  </form>
+
+  <%- include("partials/searchedUsersList.ejs") %>
+  <%- message %>
+  
+</body>
+
+</html>

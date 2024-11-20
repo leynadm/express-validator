@@ -1,0 +1,13 @@
+<ul>
+    <% if (locals.userResults) {%>
+      <% userResults.forEach(user=> { %>
+        <li>
+          ID: <%= user.id %>, Name: <%= user.firstName %>,
+              Last name: <%= user.lastName %>,
+              Email: <%= user.email %>,
+              Age: <%= user.age %>,
+              Bio: <%= user.bio %>,                    
+        </li>
+        <% }); %>
+          <% } %>
+  </ul>

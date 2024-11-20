@@ -33,13 +33,12 @@ exports.usersCreatePost = [
       });
     }
 
-    const { firstName, lastName } = req.body;
+    const { firstName, lastName, email, bio, age } = req.body;
 
-    usersStorage.addUser({ firstName, lastName });
+    usersStorage.addUser({ firstName, lastName, email, bio, age });
 
     res.redirect("/");
   },
-
 ];
 
 exports.usersListGet = (req, res) => {
@@ -55,33 +54,67 @@ exports.usersCreateGet = (req, res) => {
   });
 };
 
+exports.usersSearchGet = (req, res) => {
+  res.render("searchUser", {
+    title: "Search user",
+  });
+};
+
+
+
 exports.usersUpdateGet = (req, res) => {
+  const user = usersStorage.getUser(req.params.id);
+  res.render("updateUser", {
+    title: "Update user",
+    user: user,
+  });
+};
+
+exports.usersUpdatePost = [
+  validateUser,
+  (req, res) => {
     const user = usersStorage.getUser(req.params.id);
-    res.render("updateUser", {
-      title: "Update user",
-      user: user,
-    });
-  };
-  
-  exports.usersUpdatePost = [
-    validateUser,
-    (req, res) => {
-      const user = usersStorage.getUser(req.params.id);
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).render("updateUser", {
-          title: "Update user",
-          user: user,
-          errors: errors.array(),
-        });
-      }
-      const { firstName, lastName } = req.body;
-      usersStorage.updateUser(req.params.id, { firstName, lastName });
-      res.redirect("/");
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("updateUser", {
+        title: "Update user",
+        user: user,
+        errors: errors.array(),
+      });
     }
-  ];
-  
-  exports.usersDeletePost = (req, res) => {
-    usersStorage.deleteUser(req.params.id);
+
+    const { firstName, lastName, email, age, bio } = req.body;
+    usersStorage.updateUser(req.params.id, {
+      firstName,
+      lastName,
+      email,
+      age,
+      bio,
+    });
     res.redirect("/");
-  };
+  },
+
+];
+
+exports.searchForUsers = (req, res) => {
+  const userEmail = req.query.search;
+  const usersDb = usersStorage.storage;
+
+
+  const userResults = Object.values(usersDb).filter(
+    (user) => user.email.toLowerCase() === userEmail.toLowerCase()
+  );
+
+  return res.render("searchUser", {
+    title: "Search user",
+    userResults,
+    message:
+      userResults.length > 0 ? null : "No users found with the provided email.",
+  });
+};
+
+
+exports.usersDeletePost = (req, res) => {
+  usersStorage.deleteUser(req.params.id);
+  res.redirect("/");
+};
